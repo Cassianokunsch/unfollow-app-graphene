@@ -1,8 +1,8 @@
-from graphene import Mutation, String, ObjectType, Field, Int, Boolean
+from graphene import Mutation, String, ObjectType, Field, Boolean
 from instagramApi import login, unfollow, follow, logout
 from utils import get_current_user
 from jwt import encode
-from utils import SECRET
+from constants import SECRET
 
 
 class Login(Mutation):
@@ -35,11 +35,11 @@ class Unfollow(Mutation):
     message = String()
 
     class Arguments:
-        user_id_to_unfollow = Int(required=True)
+        user_id_to_unfollow = String(required=True)
 
     def mutate(root, info, user_id_to_unfollow):
         user = get_current_user(info.context)
-        message = unfollow(user['id'], user_id_to_unfollow)
+        message = unfollow(user['id'], int(user_id_to_unfollow))
         return Unfollow(message=message)
 
 
@@ -48,11 +48,11 @@ class Follow(Mutation):
     message = String()
 
     class Arguments:
-        user_id_to_follow = Int(required=True)
+        user_id_to_follow = String(required=True)
 
     def mutate(root, info, user_id_to_follow):
         user = get_current_user(info.context)
-        message = follow(user['id'], user_id_to_follow)
+        message = follow(user['id'], int(user_id_to_follow))
         return Follow(message=message)
 
 
