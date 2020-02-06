@@ -4,14 +4,18 @@ from graphql import GraphQLError
 
 INVALID_CREDENTIALS = "Usuário ou senha inválidos!"
 UNAUTHORIZED = "Não autorizado. Você precisa estar logado!"
-UNKNOW = "Erro desconhecido"
+TOKEN_ERROR = 'Essa requisição precisa do token JWT'
+UNKNOW_ERROR = "Erro desconhecido"
 SECRET = 'secret'
+LOGOUT_ERROR = "Ocorreu um erro ao tentar deslogar!"
+UNFOLLOW_ERROR = "Ocorreu um problema na hora de parar de seguir o usuário!"
+FOLLOW_ERROR = "Ocorreu um problema na hora de seguir o usuário!"
 
 
 def get_current_user(context):
     token = context.headers.get("Authorization")
     if not token:
-        raise GraphQLError(UNAUTHORIZED)
+        raise GraphQLError(TOKEN_ERROR)
 
     user = decode(token, SECRET, algorithms=['HS256'])
     return user

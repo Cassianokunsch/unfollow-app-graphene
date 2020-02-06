@@ -1,28 +1,17 @@
 from graphene import Mutation, String, ObjectType, Field, Int, Boolean
-from api.instagram import login, unfollow
+from instagramApi import login, unfollow, follow, logout
 from utils import get_current_user
 from jwt import encode
 from utils import SECRET
-MutationResponseInterface
-
-
-class MutationResponse(Interface):
-    code: String()
-    success: Boolean()
-    message: String()
-
-
-class UnfollowMutationResponse(ObjectType):
-    class Meta:
-        interfaces = (MutationResponse, )
 
 
 class Login(Mutation):
+
     token = String()
 
     class Arguments:
-        username = String()
-        password = String()
+        username = String(required=True)
+        password = String(required=True)
 
     def mutate(root, info, username, password):
         username_id = login(username, password)
@@ -31,36 +20,44 @@ class Login(Mutation):
         return Login(token=token)
 
 
-class Unfollow(Mutation):
+class Logout(Mutation):
+
     message = String()
-    code = String()
+
+    def mutate(root, info):
+        user = get_current_user(info.context)
+        message = logout(user['id'])
+        return Logout(message=message)
+
+
+class Unfollow(Mutation):
+
+    message = String()
 
     class Arguments:
-        user_id_to_unfollow = Int()
+        user_id_to_unfollow = Int(required=True)
 
     def mutate(root, info, user_id_to_unfollow):
         user = get_current_user(info.context)
-        if unfollow(user['id'], user_id_to_unfollow):
-            message = "ok"
-            code = "200"
-        else:
-            message = "Error"
-            code = "404"
-        return message, code
+        message = unfollow(user['id'], user_id_to_unfollow)
+        return Unfollow(message=message)
 
 
 class Follow(Mutation):
+
     message = String()
 
     class Arguments:
-        user_id_to_follow = Int()
+        user_id_to_follow = Int(required=True)
 
     def mutate(root, info, user_id_to_follow):
         user = get_current_user(info.context)
-        return follow(user['id'], user_id_to_follow)
+        message = follow(user['id'], user_id_to_follow)
+        return Follow(message=message)
 
 
 class Mutation(ObjectType):
     login = Login.Field()
+    logout = Logout.Field()
     unfollow = Unfollow.Field()
     follow = Follow.Field()
