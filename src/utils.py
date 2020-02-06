@@ -2,15 +2,16 @@ from jwt import decode
 from graphql import GraphQLError
 
 
-INVALID_CREDENTIALS = -1
-UNKNOW = -999
+INVALID_CREDENTIALS = "Usuário ou senha inválidos!"
+UNAUTHORIZED = "Não autorizado. Você precisa estar logado!"
+UNKNOW = "Erro desconhecido"
 SECRET = 'secret'
 
 
 def get_current_user(context):
     token = context.headers.get("Authorization")
     if not token:
-        raise GraphQLError("You must be authenticated!")
+        raise GraphQLError(UNAUTHORIZED)
 
     user = decode(token, SECRET, algorithms=['HS256'])
     return user

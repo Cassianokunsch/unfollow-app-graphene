@@ -1,4 +1,5 @@
 from InstagramAPI import InstagramAPI
+from graphql import GraphQLError
 from utils import INVALID_CREDENTIALS, UNKNOW
 
 dic_users_logged = dict()
@@ -11,9 +12,9 @@ def login(username, password):
         print(dic_users_logged)
         return api.username_id
     elif api.LastJson['invalid_credentials']:
-        return INVALID_CREDENTIALS
+        raise GraphQLError(INVALID_CREDENTIALS)
 
-    return UNKNOW
+    raise GraphQLError(UNKNOW)
 
 
 def get_total_followers(username_id):
@@ -48,9 +49,16 @@ def get_not_followers(username_id):
 def unfollow(username_id, username_id_to_unfollow):
     api = dic_users_logged[username_id]
     ok = api.unfollow(username_id_to_unfollow)
-    print(api.LastJson)
-    print(api.LastResponse)
     if ok:
-        return "Você parou de seguir " + username_id_to_unfollow
+        return True
     else:
-        return "Ocorreu um erro ao tentar para de seguir " + username_id_to_unfollow
+        return False
+
+
+def follow(username_id, username_id_to_follow):
+    api = dic_users_logged[username_id]
+    ok = api.follow(username_id_to_follow)
+    if ok:
+        return True
+    else:
+        return False

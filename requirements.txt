@@ -1,5 +1,6 @@
 aniso8601==7.0.0
 astroid==2.3.3
+autopep8==1.5
 Click==7.0
 decorator==4.0.11
 Flask==1.1.1
@@ -20,6 +21,7 @@ moviepy==0.2.3.2
 numpy==1.18.1
 Pillow==7.0.0
 promise==2.3
+pycodestyle==2.5.0
 PyJWT==1.7.1
 pylint==2.4.4
 requests==2.11.1
