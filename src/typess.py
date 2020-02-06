@@ -1,9 +1,8 @@
 from graphene import ObjectType, Interface, String, Int, Boolean
-from scalars import BigInt
 
 
 class UserType(ObjectType):
-    pk = BigInt()
+    pk = String()
     username = String()
     full_name = String()
     is_private = Boolean()
@@ -15,7 +14,7 @@ class UserType(ObjectType):
 
 
 class FollowUser(Interface):
-    pk = BigInt()
+    pk = String()
     username = String()
     full_name = String()
     is_private = Boolean()

@@ -1,5 +1,5 @@
 from graphql import GraphQLError
-from utils import UNAUTHORIZED
+from constants import UNAUTHORIZED
 
 users_session = dict()
 

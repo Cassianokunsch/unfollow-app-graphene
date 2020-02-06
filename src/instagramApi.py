@@ -1,6 +1,7 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
-from utils import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR
+from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR
+from utils import parser_fields_int_to_string
 from session import set_user_session, remove_user_session, get_user_session
 
 
@@ -25,12 +26,12 @@ def logout(username_id):
 
 def get_total_followers(username_id):
     api = get_user_session(username_id)
-    return api.getTotalFollowers(username_id)
+    return parser_fields_int_to_string(api.getTotalFollowers(username_id))
 
 
 def get_total_followings(username_id):
     api = get_user_session(username_id)
-    return api.getTotalFollowings(username_id)
+    return parser_fields_int_to_string(api.getTotalFollowings(username_id))
 
 
 def get_not_followers(username_id):
@@ -43,19 +44,23 @@ def get_not_followers(username_id):
     lst_following = api.getTotalFollowings(username_id)
 
     response = api.getTotalFollowers(username_id)
-    for user in response:
-        lst_followers.append(user['pk'])
 
-    for following in lst_following:
-        if following['pk'] not in lst_followers:
-            lst_not_followers.append(following)
+    if len(lst_followers) != len(lst_following):
+        for user in response:
+            lst_followers.append(user['pk'])
 
-    return lst_not_followers
+        for following in lst_following:
+            if following['pk'] not in lst_followers:
+                lst_not_followers.append(following)
+
+    return parser_fields_int_to_string(lst_not_followers)
 
 
 def unfollow(username_id, username_id_to_unfollow):
     api = get_user_session(username_id)
     ok = api.unfollow(username_id_to_unfollow)
+    print(username_id_to_unfollow)
+    print(ok)
     if ok:
         return "Você parou de seguir!"
     else:
