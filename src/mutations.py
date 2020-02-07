@@ -3,7 +3,7 @@ from instagramApi import login, unfollow, follow, logout
 from utils import get_current_user
 from jwt import encode
 from constants import SECRET
-from types import Payload
+from typess import Payload
 
 
 class Login(Mutation):
