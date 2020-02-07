@@ -1,26 +1,31 @@
 from graphene import ObjectType, List, Field, NonNull, String
-from instagramApi import get_total_followers, get_not_followers, get_total_followings
+from instagramApi import get_not_followers, get_user_info, get_user_followers_or_followings
 from utils import get_current_user
-from typess import FollowerType, UnfollowerType, FollowingType, UserType
+from typess import UnfollowerType, UserType, MyFollowersResponse, MyFollowingsResponse
 
 
 class Query(ObjectType):
-    me = String()
-    list_my_followers = List(NonNull(FollowerType))
-    list_my_followings = List(NonNull(FollowingType))
-    list_my_unfollowers = List(NonNull(UnfollowerType))
+    me = Field(NonNull(UserType))
+    my_list_followers = Field(MyFollowersResponse, max_id=String())
+    my_list_followings = Field(MyFollowingsResponse, max_id=String())
+    my_list_unfollowers = List(NonNull(UnfollowerType))
 
     def resolve_me(self, info):
-        return "teste"
-
-    def resolve_list_my_followers(self, info):
         user = get_current_user(info.context)
-        return get_total_followers(user['id'])
+        return get_user_info(user['id'])
 
-    def resolve_list_my_followings(self, info):
+    def resolve_my_list_followings(self, info, max_id):
         user = get_current_user(info.context)
-        return get_total_followings(user['id'])
+        users, next_max_id = get_user_followers_or_followings(
+            'followings', user['id'], max_id)
+        return MyFollowingsResponse(followings=users, next_max_id=next_max_id)
 
-    def resolve_list_my_unfollowers(self, info):
+    def resolve_my_list_followers(self, info, max_id=):
+        user = get_current_user(info.context)
+        users, next_max_id = get_user_followers_or_followings(
+            'followers', user['id'], max_id)
+        return MyFollowersResponse(followers=users, next_max_id=next_max_id)
+
+    def resolve_my_list_unfollowers(self, info):
         user = get_current_user(info.context)
         return get_not_followers(user['id'])
