@@ -18,9 +18,6 @@ jobs:
       
       - name: push
         run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-      
-      - name: Get heroku token
-        run: heroku auth:token
-        
+
       - name: Release
         run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web 
