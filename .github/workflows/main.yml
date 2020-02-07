@@ -14,7 +14,7 @@ jobs:
         run: docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
       
       - name: Login
-        run: heroku auth:token | docker login --username="${{ secrets.DOCKER_LOGIN }}" --password-stdin registry.heroku.com
+        run: heroku auth:token | docker login --username=_ --password-stdin registry.heroku.com
       
       - name: push
         run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
