@@ -20,7 +20,7 @@ class Query(ObjectType):
             'followings', user['id'], max_id)
         return MyFollowingsResponse(followings=users, next_max_id=next_max_id)
 
-    def resolve_my_list_followers(self, info, max_id=):
+    def resolve_my_list_followers(self, info, max_id):
         user = get_current_user(info.context)
         users, next_max_id = get_user_followers_or_followings(
             'followers', user['id'], max_id)
