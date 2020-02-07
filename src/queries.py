@@ -6,8 +6,8 @@ from typess import UnfollowerType, UserType, MyFollowersResponse, MyFollowingsRe
 
 class Query(ObjectType):
     me = Field(NonNull(UserType))
-    my_list_followers = Field(MyFollowersResponse, max_id=String())
-    my_list_followings = Field(MyFollowingsResponse, max_id=String())
+    my_list_followers = Field(MyFollowersResponse, max_id=String(default_value=''))
+    my_list_followings = Field(MyFollowingsResponse, max_id=String(default_value=''))
     my_list_unfollowers = List(NonNull(UnfollowerType))
 
     def resolve_me(self, info):
