@@ -1,6 +1,10 @@
 from graphene import ObjectType, Interface, String, Int, Boolean, List
 
 
+class Payload(ObjectType):
+    token = String()
+
+
 class UserType(ObjectType):
     pk = String()
     username = String()
