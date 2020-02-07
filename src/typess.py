@@ -1,4 +1,4 @@
-from graphene import ObjectType, Interface, String, Int, Boolean
+from graphene import ObjectType, Interface, String, Int, Boolean, List
 
 
 class UserType(ObjectType):
@@ -11,6 +11,9 @@ class UserType(ObjectType):
     is_verified = Boolean()
     has_anonymous_profile_picture = Boolean()
     latest_reel_media = Int()
+    follower_count = Int()
+    following_count = Int()
+    biography = String()
 
 
 class FollowUser(Interface):
@@ -38,3 +41,18 @@ class UnfollowerType(ObjectType):
 class FollowingType(ObjectType):
     class Meta:
         interfaces = (FollowUser, )
+
+
+class MyFollowersResponse(ObjectType):
+    next_max_id = String()
+    followers = List(FollowerType)
+
+
+class MyFollowingsResponse(ObjectType):
+    next_max_id = String()
+    followings = List(FollowingType)
+
+
+class MyUnfollowersResponse(ObjectType):
+    next_max_id = String()
+    unfollowers = List(UnfollowerType)
