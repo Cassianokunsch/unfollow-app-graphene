@@ -3,11 +3,12 @@ from instagramApi import login, unfollow, follow, logout
 from utils import get_current_user
 from jwt import encode
 from constants import SECRET
+from typess import Payload
 
 
 class Login(Mutation):
 
-    token = String()
+    Output = Payload
 
     class Arguments:
         username = String(required=True)
@@ -17,7 +18,7 @@ class Login(Mutation):
         username_id = login(username, password)
         token = encode({'id': username_id}, SECRET,
                        algorithm='HS256').decode('utf-8')
-        return Login(token=token)
+        return Payload(token=token)
 
 
 class Logout(Mutation):
