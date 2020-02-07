@@ -1,7 +1,6 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
 from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR
-from utils import parser_fields_int_to_string
 from session import set_user_session, remove_user_session, get_user_session
 
 
@@ -26,12 +25,12 @@ def logout(username_id):
 
 def get_total_followers(username_id):
     api = get_user_session(username_id)
-    return parser_fields_int_to_string(api.getTotalFollowers(username_id))
+    return api.getTotalFollowers(username_id)
 
 
 def get_total_followings(username_id):
     api = get_user_session(username_id)
-    return parser_fields_int_to_string(api.getTotalFollowings(username_id))
+    return api.getTotalFollowings(username_id)
 
 
 def get_not_followers(username_id):
@@ -53,24 +52,44 @@ def get_not_followers(username_id):
             if following['pk'] not in lst_followers:
                 lst_not_followers.append(following)
 
-    return parser_fields_int_to_string(lst_not_followers)
+    return lst_not_followers
 
 
 def unfollow(username_id, username_id_to_unfollow):
     api = get_user_session(username_id)
-    ok = api.unfollow(username_id_to_unfollow)
-    print(username_id_to_unfollow)
-    print(ok)
-    if ok:
+    if api.unfollow(username_id_to_unfollow):
         return "Você parou de seguir!"
-    else:
-        raise GraphQLError(UNFOLLOW_ERROR)
+
+    raise GraphQLError(UNFOLLOW_ERROR)
 
 
 def follow(username_id, username_id_to_follow):
     api = get_user_session(username_id)
-    ok = api.follow(username_id_to_follow)
-    if ok:
+    if api.follow(username_id_to_follow):
         return "Você começou a seguir!"
+
+    raise GraphQLError(FOLLOW_ERROR)
+
+
+def get_user_info(username_id):
+    api = get_user_session(username_id)
+    if api.getSelfUsernameInfo():
+        return api.LastJson['user']
+
+    raise GraphQLError(UNKNOW_ERROR)
+
+
+def get_user_followers_or_followings(type_user, username_id, max_id):
+    api = get_user_session(username_id)
+
+    if type_user == 'followers':
+        ok = api.getUserFollowers(username_id, max_id)
     else:
-        raise GraphQLError(FOLLOW_ERROR)
+        ok = api.getUserFollowings(username_id, max_id)
+
+    if ok:
+        users = api.LastJson['users']
+        next_max_id = api.LastJson['next_max_id']
+        return users, next_max_id
+
+    raise GraphQLError(UNKNOW_ERROR)
