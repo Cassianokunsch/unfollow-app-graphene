@@ -44,14 +44,17 @@ class FollowingType(ObjectType):
 
 class MyFollowersResponse(ObjectType):
     next_max_id = String()
+    size = Int()
     followers = List(FollowerType)
 
 
 class MyFollowingsResponse(ObjectType):
     next_max_id = String()
+    size = Int()
     followings = List(FollowingType)
 
 
 class MyUnfollowersResponse(ObjectType):
     next_max_id = String()
+    size = Int()
     unfollowers = List(UnfollowerType)
