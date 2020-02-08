@@ -1,6 +1,7 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
-from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR
+from jwt import encode
+from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR, SECRET
 from session import set_user_session, remove_user_session, get_user_session
 
 
@@ -8,7 +9,8 @@ def login(username, password):
     api = InstagramAPI(username, password)
     if api.login():
         set_user_session(api.username_id, api)
-        return api.username_id
+        return "Logado com sucesso!", encode({'id': api.username_id}, SECRET,
+                                             algorithm='HS256').decode('utf-8')
     elif api.LastJson['invalid_credentials']:
         raise GraphQLError(INVALID_CREDENTIALS)
 
@@ -44,13 +46,12 @@ def get_not_followers(username_id):
 
     response = api.getTotalFollowers(username_id)
 
-    if len(lst_followers) != len(lst_following):
-        for user in response:
-            lst_followers.append(user['pk'])
+    for user in response:
+        lst_followers.append(user['pk'])
 
-        for following in lst_following:
-            if following['pk'] not in lst_followers:
-                lst_not_followers.append(following)
+    for following in lst_following:
+        if following['pk'] not in lst_followers:
+            lst_not_followers.append(following)
 
     return lst_not_followers
 
