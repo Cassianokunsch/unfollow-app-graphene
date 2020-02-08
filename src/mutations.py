@@ -1,4 +1,4 @@
-from graphene import Mutation, String, ObjectType, Field, Boolean
+from graphene import Mutation, String, ObjectType, Field, NonNull
 from instagramApi import login, unfollow, follow, logout
 from utils import get_current_user
 from typess import Payload
