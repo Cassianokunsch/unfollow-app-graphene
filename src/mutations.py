@@ -16,10 +16,9 @@ class Login(Mutation):
 
     def mutate(root, info, username, password):
         username_id = login(username, password)
-        print(SECRET)
         token = encode({'id': username_id}, SECRET,
                        algorithm='HS256').decode('utf-8')
-        return Payload(token=token)
+        return Payload(token=SECRET)
 
 
 class Logout(Mutation):
