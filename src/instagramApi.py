@@ -1,8 +1,44 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
 from jwt import encode
-from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR, SECRET
+from constants import INVALID_CREDENTIALS, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR, SECRET, SEND_CODE
 from session import set_user_session, remove_user_session, get_user_session
+import time
+import os
+import json
+
+
+def request_code_challenge(self, checkpoint_url):
+    BASE_URL = 'https://www.instagram.com/'
+    self.s.headers.update({'Referer': BASE_URL})
+    req = self.s.get(BASE_URL[:-1] + checkpoint_url)
+    self.s.headers.update(
+        {'X-CSRFToken': req.cookies['csrftoken'], 'X-Instagram-AJAX': '1'})
+    self.s.headers.update({'Referer': BASE_URL[:-1] + checkpoint_url})
+    challenge_data = {'choice': 0}
+    challenge = self.s.post(
+        BASE_URL[:-1] + checkpoint_url, data=challenge_data, allow_redirects=True)
+    self.s.headers.update(
+        {'X-CSRFToken': challenge.cookies['csrftoken'], 'X-Instagram-AJAX': '1'})
+
+
+def send_code_challenge(checkpoint_url, code):
+    code_data = {'security_code': code}
+    code = self.s.post(BASE_URL[:-1] + checkpoint_url,
+                       data=code_data, allow_redirects=True)
+    self.s.headers.update({'X-CSRFToken': code.cookies['csrftoken']})
+    self.cookies = code.cookies
+    code_text = json.loads(code.text)
+    if code_text.get('status') == 'ok':
+        self.authenticated = True
+        self.logged_in = True
+    elif 'errors' in code.text:
+        for count, error in enumerate(code_text['challenge']['errors']):
+            count += 1
+            logging.error(
+                'Session error %(count)s: "%(error)s"' % locals())
+    else:
+        logging.error(json.dumps(code_text))
 
 
 def login(username, password):
@@ -11,10 +47,18 @@ def login(username, password):
         set_user_session(api.username_id, api)
         return "Logado com sucesso!", encode({'id': api.username_id}, SECRET,
                                              algorithm='HS256').decode('utf-8')
-    elif api.LastJson['invalid_credentials']:
+    elif 'invalid_credentials' in list(api.LastJson.keys()):
         raise GraphQLError(INVALID_CREDENTIALS)
+    elif api.LastJson['message'] == 'challenge_required':
+        api.request_code_challenge = request_code_challenge
+        api.send_code_challenge = send_code_challenge
 
-    raise GraphQLError(UNKNOW_ERROR)
+        link = api.LastJson['challenge']['api_path']
+        api.request_code_challenge(link)
+        set_user_challenge(api, link)
+        GraphQLError(SEND_CODE)
+    else:
+        raise GraphQLError(UNKNOW_ERROR)
 
 
 def logout(username_id):
