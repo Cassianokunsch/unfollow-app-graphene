@@ -8,3 +8,4 @@ SECRET = os.environ.get('SECRET', "secret")
 LOGOUT_ERROR = "Ocorreu um erro ao tentar deslogar!"
 UNFOLLOW_ERROR = "Ocorreu um problema na hora de parar de seguir o usuário!"
 FOLLOW_ERROR = "Ocorreu um problema na hora de seguir o usuário!"
+SEND_CODE = "Use a mutation sendCode para inserir o código de segurança!"
