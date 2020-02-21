@@ -1,12 +1,12 @@
 from graphene import Mutation, String, ObjectType, Field, NonNull
-from instagramApi import login, unfollow, follow, logout
+from instagramApi import login, unfollow, follow, logout, get_user_info
 from utils import get_current_user
-from typess import Payload
+from typess import AuthPayload
 
 
 class Login(Mutation):
 
-    Output = Payload
+    Output = AuthPayload
 
     class Arguments:
         username = String(required=True)
@@ -14,7 +14,9 @@ class Login(Mutation):
 
     def mutate(root, info, username, password):
         message, token = login(username, password)
-        return Payload(token=token, message=message)
+        id = get_current_user(token)['id']
+        user = get_user_info(id)
+        return AuthPayload(token=token, message=message, user=user)
 
 
 class Logout(Mutation):
