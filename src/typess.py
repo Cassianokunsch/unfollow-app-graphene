@@ -1,9 +1,4 @@
-from graphene import ObjectType, Interface, String, Int, Boolean, List, NonNull
-
-
-class Payload(ObjectType):
-    message = NonNull(String)
-    token = NonNull(String)
+from graphene import ObjectType, Interface, String, Int, Boolean, List, NonNull, Field
 
 
 class FollowUser(Interface):
@@ -25,6 +20,12 @@ class UserType(ObjectType):
     follower_count = Int()
     following_count = Int()
     biography = String()
+
+
+class AuthPayload(ObjectType):
+    message = NonNull(String)
+    token = NonNull(String)
+    user = Field(UserType)
 
 
 class FollowerType(ObjectType):
