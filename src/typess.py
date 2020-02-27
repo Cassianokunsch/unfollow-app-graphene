@@ -25,7 +25,6 @@ class UserType(ObjectType):
 class AuthPayload(ObjectType):
     message = NonNull(String)
     token = NonNull(String)
-    user = Field(UserType)
 
 
 class FollowerType(ObjectType):
