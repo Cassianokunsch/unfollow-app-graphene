@@ -119,7 +119,7 @@ def follow(username_id, username_id_to_follow):
 
 def get_user_info(username_id):
     api = get_user_session(username_id)
-    if api.getapiUsernameInfo():
+    if api.getUsernameInfo():
         return api.LastJson['user']
 
     raise GraphQLError(UNKNOW_ERROR)
