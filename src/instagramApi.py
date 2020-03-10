@@ -1,7 +1,7 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
 from jwt import encode
-from constants import INVALID_CREDENTIALS_ERROR, UNKNOW_ERROR, LOGOUT_ERROR, UNFOLLOW_ERROR, FOLLOW_ERROR, SEND_CODE, LOGIN_SUCCESS, CHALLENGE_REQUIRED, BASE_URL, CODE_ERROR, LOGOUT_SUCCESS, FOLLOW_SUCCESS, UNFOLLOW_SUCCESS
+from constants import INVALID_CREDENTIALS_ERROR, UNKNOW_ERROR, LOGOUT_ERROR, TOO_MANY_REQUESTS, UNFOLLOW_ERROR, FOLLOW_ERROR, SEND_CODE, LOGIN_SUCCESS, CHALLENGE_REQUIRED, BASE_URL, CODE_ERROR, LOGOUT_SUCCESS, FOLLOW_SUCCESS, UNFOLLOW_SUCCESS
 from auth import set_user_session, remove_user_session, get_user_session, set_user_challenge, get_user_challenge, remove_user_challenge
 from utils import get_token
 import time
@@ -72,24 +72,23 @@ def logout(username_id):
     return LOGOUT_SUCCESS
 
 
-def get_total_followers(username_id):
-    api = get_user_session(username_id)
-    return api.getTotalFollowers(username_id)
-
-
-def get_total_followings(username_id):
-    api = get_user_session(username_id)
-    return api.getTotalFollowings(username_id)
-
-
 def get_not_followers(username_id):
     lst_not_followers = []
     lst_followers = []
     lst_following = []
 
     api = get_user_session(username_id)
-    lst_following = api.getTotalFollowings(username_id)
-    response = api.getTotalFollowers(username_id)
+
+    try:
+        lst_following = api.getTotalFollowings(username_id)
+        response = api.getTotalFollowers(username_id)
+    except Exception:
+        if api.LastJson['status'] == 'fail':
+            if api.LastJson['message'] == 'Please wait a few minutes before you try again.':
+                raise GraphQLError(TOO_MANY_REQUESTS)
+
+            print(api.LastJson['message'])
+            raise GraphQLError(UNKNOW_ERROR)
 
     for user in response:
         lst_followers.append(user['pk'])
@@ -137,5 +136,9 @@ def get_user_followers_or_followings(type_user, username_id, max_id):
         users = api.LastJson['users']
         next_max_id = api.LastJson['next_max_id']
         return users, next_max_id
+    else:
+        response = api.LastJson
+        if response['message'] == 'Please wait a few minutes before you try again.':
+            raise GraphQLError(TOO_MANY_REQUESTS)
 
     raise GraphQLError(UNKNOW_ERROR)
