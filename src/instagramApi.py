@@ -83,12 +83,14 @@ def get_not_followers(username_id):
         lst_following = api.getTotalFollowings(username_id)
         response = api.getTotalFollowers(username_id)
     except Exception:
-        if api.LastJson['status'] == 'fail':
-            if api.LastJson['message'] == 'Please wait a few minutes before you try again.':
-                raise GraphQLError(TOO_MANY_REQUESTS)
+        pass
 
-            print(api.LastJson['message'])
-            raise GraphQLError(UNKNOW_ERROR)
+    if api.LastJson['status'] == 'fail':
+        if api.LastJson['message'] == 'Please wait a few minutes before you try again.':
+            raise GraphQLError(TOO_MANY_REQUESTS)
+
+        print(api.LastJson['message'])
+        raise GraphQLError(UNKNOW_ERROR)
 
     for user in response:
         lst_followers.append(user['pk'])
