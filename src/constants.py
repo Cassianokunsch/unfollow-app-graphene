@@ -18,3 +18,4 @@ CODE_ERROR = 'Código errado. Verifique o código que enviamos para você e tent
 LOGOUT_SUCCESS = "Deslogado com sucesso!"
 UNFOLLOW_SUCCESS = "Você parou de seguir!"
 FOLLOW_SUCCESS = "Você começou a seguir!"
+TOO_MANY_REQUESTS = "Por favor tente mais tarde!"
