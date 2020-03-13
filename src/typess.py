@@ -42,19 +42,19 @@ class FollowingType(ObjectType):
         interfaces = (FollowUser, )
 
 
-class MyFollowersResponse(ObjectType):
-    next_max_id = String()
+class MyFollowersType(ObjectType):
+    next_page = String()
     size = Int()
     followers = List(FollowerType)
 
 
-class MyFollowingsResponse(ObjectType):
-    next_max_id = String()
+class MyFollowingsType(ObjectType):
+    next_page = String()
     size = Int()
     followings = List(FollowingType)
 
 
-class MyUnfollowersResponse(ObjectType):
-    next_max_id = String()
+class MyUnfollowersType(ObjectType):
+    next_page = String()
     size = Int()
     unfollowers = List(UnfollowerType)

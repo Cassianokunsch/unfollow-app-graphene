@@ -1,33 +1,44 @@
-from graphene import ObjectType, List, Field, NonNull, String
-from instagramApi import get_not_followers, get_user_info, get_user_followers_or_followings
+from graphene import ObjectType, Field, NonNull, String
+from instagramApi import get_not_followers, get_user_info, get_user_followers_or_followings, get_me
 from utils import get_current_user
-from typess import UnfollowerType, UserType, MyFollowersResponse, MyFollowingsResponse
+from typess import UserType, MyFollowersType, MyFollowingsType, MyUnfollowersType
 
 
 class Query(ObjectType):
     me = Field(NonNull(UserType))
-    my_list_followers = Field(
-        MyFollowersResponse, max_id=String(default_value=''))
-    my_list_followings = Field(
-        MyFollowingsResponse, max_id=String(default_value=''))
-    my_list_unfollowers = List(NonNull(UnfollowerType))
+
+    user_info = Field(NonNull(UserType), pk=String(required=True))
+
+    my_followers = Field(
+        NonNull(MyFollowersType), next_page=String(default_value=''))
+
+    my_followings = Field(
+        NonNull(MyFollowingsType), next_page=String(default_value=''))
+
+    my_unfollowers = Field(NonNull(MyUnfollowersType),
+                           next_page=String(default_value=''))
 
     def resolve_me(self, info):
-        user = get_current_user(info.context)
-        return get_user_info(user)
+        user_pk = get_current_user(info.context)
+        return get_me(user_pk)
 
-    def resolve_my_list_followings(self, info, max_id):
-        user = get_current_user(info.context)
-        users, next_max_id = get_user_followers_or_followings(
-            'followings', user, max_id)
-        return MyFollowingsResponse(followings=users, next_max_id=next_max_id, size=len(users))
+    def resolve_user_info(self, info, pk):
+        user_pk = get_current_user(info.context)
+        return get_user_info(user_pk, pk)
 
-    def resolve_my_list_followers(self, info, max_id):
-        user = get_current_user(info.context)
-        users, next_max_id = get_user_followers_or_followings(
-            'followers', user, max_id)
-        return MyFollowersResponse(followers=users, next_max_id=next_max_id, size=len(users))
+    def resolve_my_followings(self, info, next_page):
+        user_pk = get_current_user(info.context)
+        users, next_page = get_user_followers_or_followings(
+            'followings', user_pk, next_page)
+        return MyFollowingsType(followings=users, next_page=next_page, size=len(users))
 
-    def resolve_my_list_unfollowers(self, info):
-        user = get_current_user(info.context)
-        return get_not_followers(user)
+    def resolve_my_followers(self, info, next_page):
+        user_pk = get_current_user(info.context)
+        users, next_page = get_user_followers_or_followings(
+            'followers', user_pk, next_page)
+        return MyFollowersType(followers=users, next_page=next_page, size=len(users))
+
+    def resolve_my_unfollowers(self, info, next_page):
+        user_pk = get_current_user(info.context)
+        users = get_not_followers(user_pk)
+        return MyUnfollowersType(unfollowers=users, next_page=None, size=len(users))

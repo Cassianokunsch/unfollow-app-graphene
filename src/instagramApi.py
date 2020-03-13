@@ -38,11 +38,14 @@ def login(username, password):
         return LOGIN_SUCCESS, get_token({'id': api.username_id})
     elif 'invalid_credentials' in list(api.LastJson.keys()):
         raise GraphQLError(INVALID_CREDENTIALS_ERROR)
-    elif api.LastJson['message'] == 'challenge_required':
-        link = api.LastJson['challenge']['api_path']
-        request_code_challenge_api(api, link)
-        set_user_challenge(api, link)
-        return CHALLENGE_REQUIRED, get_token({'link': link})
+    elif 'message' in list(api.LastJson.keys()):
+        if api.LastJson['message'] == 'challenge_required':
+            link = api.LastJson['challenge']['api_path']
+            request_code_challenge_api(api, link)
+            set_user_challenge(api, link)
+            return CHALLENGE_REQUIRED, get_token({'link': link})
+        else:
+            print(api.LastJson)
     else:
         raise GraphQLError(UNKNOW_ERROR)
 
@@ -67,21 +70,21 @@ def send_code_challenge(link, code):
         raise GraphQLError(json.dumps(code_text))
 
 
-def logout(username_id):
-    remove_user_session(username_id)
+def logout(current_user_pk):
+    remove_user_session(current_user_pk)
     return LOGOUT_SUCCESS
 
 
-def get_not_followers(username_id):
+def get_not_followers(current_user_pk):
     lst_not_followers = []
     lst_followers = []
     lst_following = []
 
-    api = get_user_session(username_id)
+    api = get_user_session(current_user_pk)
 
     try:
-        lst_following = api.getTotalFollowings(username_id)
-        response = api.getTotalFollowers(username_id)
+        lst_following = api.getTotalFollowings(current_user_pk)
+        response = api.getTotalFollowers(current_user_pk)
     except Exception:
         pass
 
@@ -102,37 +105,45 @@ def get_not_followers(username_id):
     return lst_not_followers
 
 
-def unfollow(username_id, username_id_to_unfollow):
-    api = get_user_session(username_id)
-    if api.unfollow(username_id_to_unfollow):
+def unfollow(current_user_pk, pk):
+    api = get_user_session(current_user_pk)
+    if api.unfollow(pk):
         return UNFOLLOW_SUCCESS
 
     raise GraphQLError(UNFOLLOW_ERROR)
 
 
-def follow(username_id, username_id_to_follow):
-    api = get_user_session(username_id)
-    if api.follow(username_id_to_follow):
+def follow(current_user_pk, pk):
+    api = get_user_session(current_user_pk)
+    if api.follow(pk):
         return FOLLOW_SUCCESS
 
     raise GraphQLError(FOLLOW_ERROR)
 
 
-def get_user_info(username_id):
-    api = get_user_session(username_id)
-    if api.getUsernameInfo(username_id):
+def get_user_info(current_user_pk, pk):
+    api = get_user_session(current_user_pk)
+    if api.getUsernameInfo(pk):
         return api.LastJson['user']
 
     raise GraphQLError(UNKNOW_ERROR)
 
 
-def get_user_followers_or_followings(type_user, username_id, max_id):
-    api = get_user_session(username_id)
+def get_me(current_user_pk):
+    api = get_user_session(current_user_pk)
+    if api.getUsernameInfo(current_user_pk):
+        return api.LastJson['user']
+
+    raise GraphQLError(UNKNOW_ERROR)
+
+
+def get_user_followers_or_followings(type_user, current_user_pk, max_id):
+    api = get_user_session(current_user_pk)
 
     if type_user == 'followers':
-        ok = api.getUserFollowers(username_id, max_id)
+        ok = api.getUserFollowers(current_user_pk, max_id)
     else:
-        ok = api.getUserFollowings(username_id, max_id)
+        ok = api.getUserFollowings(current_user_pk, max_id)
 
     if ok:
         users = api.LastJson['users']
