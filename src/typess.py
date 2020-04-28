@@ -19,6 +19,7 @@ class UserType(ObjectType):
 
     follower_count = Int()
     following_count = Int()
+    unfollower_count = Int()
     biography = String()
 
 
@@ -58,3 +59,27 @@ class MyUnfollowersType(ObjectType):
     next_page = String()
     size = Int()
     unfollowers = List(UnfollowerType)
+
+
+class PictureType(ObjectType):
+    pk = String()
+    comment_count = Int()
+    like_count = Int()
+    url = String()
+
+
+class Feed(ObjectType):
+    next_page = String()
+    size = Int()
+    pictures = List(PictureType)
+
+
+class Me(ObjectType):
+    class Meta:
+        interfaces = (FollowUser, )
+
+    follower_count = Int()
+    following_count = Int()
+    unfollower_count = Int()
+    biography = String()
+    feed = Field(Feed)
