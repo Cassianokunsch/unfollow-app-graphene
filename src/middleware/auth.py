@@ -1,5 +1,5 @@
 from graphql import GraphQLError
-from constants import UNAUTHORIZED_ERROR, UNAUTHORIZED_CHALLENGE_ERROR
+from src.shared.constants import UNAUTHORIZED_ERROR, UNAUTHORIZED_CHALLENGE_ERROR
 
 users_session = dict()
 users_challenge = dict()

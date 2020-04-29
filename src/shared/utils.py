@@ -1,6 +1,6 @@
 from jwt import decode, encode
 from graphql import GraphQLError
-from constants import TOKEN_ERROR, SECRET, INVALID_TOKEN, CHALLENGE_REQUIRED
+from src.shared.constants import TOKEN_ERROR, SECRET, INVALID_TOKEN, CHALLENGE_REQUIRED
 
 
 def get_token(data):

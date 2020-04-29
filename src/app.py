@@ -1,8 +1,7 @@
 from flask import Flask
 from flask_graphql import GraphQLView
-from schema import schema
+from src.schema import schema
 import os
-
 
 app = Flask(__name__)
 
