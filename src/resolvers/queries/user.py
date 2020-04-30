@@ -1,8 +1,8 @@
 from graphene import ObjectType, Field, NonNull, String
-from src.service.instagramApi import get_not_followers, get_user_followers_or_followings, get_me
-from src.shared.utils import get_current_user
-from src.resolvers.types.types import UserType, MyFollowersType, MyFollowingsType, MyUnfollowersType
-from src.middleware.auth import get_user_session
+from service.instagramApi import get_not_followers, get_user_followers_or_followings, get_me
+from shared.utils import get_current_user
+from resolvers.types.types import UserType, MyFollowersType, MyFollowingsType, MyUnfollowersType
+from middleware.auth import get_user_session
 
 
 class UserQuery(ObjectType):

@@ -1,7 +1,7 @@
 from graphene import Mutation, String, NonNull
-from src.service.instagramApi import login, logout, get_link_challenge, send_code_challenge
-from src.shared.utils import get_current_user
-from src.resolvers.types.types import AuthPayload
+from service.instagramApi import login, logout, send_code_challenge
+from shared.utils import get_current_user, get_link_challenge
+from resolvers.types.types import AuthPayload
 
 
 class Login(Mutation):

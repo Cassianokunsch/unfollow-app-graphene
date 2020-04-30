@@ -1,6 +1,6 @@
 from graphene import Mutation, String, NonNull
-from src.service.instagramApi import unfollow, follow
-from src.shared.utils import get_current_user
+from service.instagramApi import unfollow, follow
+from shared.utils import get_current_user
 
 
 class Unfollow(Mutation):

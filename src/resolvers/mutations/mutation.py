@@ -1,6 +1,6 @@
 from graphene import ObjectType
-from src.resolvers.mutations.auth import Login, Logout, SendCodeToChallenge
-from src.resolvers.mutations.user import Unfollow, Follow
+from resolvers.mutations.auth import Login, Logout, SendCodeToChallenge
+from resolvers.mutations.user import Unfollow, Follow
 
 
 class Mutation(ObjectType):

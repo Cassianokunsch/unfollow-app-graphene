@@ -1,10 +1,10 @@
 from InstagramAPI import InstagramAPI
 from graphql import GraphQLError
 from jwt import encode
-from src.shared.constants import INVALID_CREDENTIALS_ERROR, UNKNOW_ERROR, LOGOUT_ERROR, TOO_MANY_REQUESTS, UNFOLLOW_ERROR, FOLLOW_ERROR, SEND_CODE, LOGIN_SUCCESS, CHALLENGE_REQUIRED, BASE_URL, CODE_ERROR, LOGOUT_SUCCESS, FOLLOW_SUCCESS, UNFOLLOW_SUCCESS
-from src.middleware.auth import set_user_session, remove_user_session, get_user_session, set_user_challenge, get_user_challenge, remove_user_challenge
-from src.shared.utils import get_token
-from src.resolvers.types.types import PictureType
+from shared.constants import INVALID_CREDENTIALS_ERROR, UNKNOW_ERROR, LOGOUT_ERROR, TOO_MANY_REQUESTS, UNFOLLOW_ERROR, FOLLOW_ERROR, SEND_CODE, LOGIN_SUCCESS, CHALLENGE_REQUIRED, BASE_URL, CODE_ERROR, LOGOUT_SUCCESS, FOLLOW_SUCCESS, UNFOLLOW_SUCCESS
+from middleware.auth import set_user_session, remove_user_session, get_user_session, set_user_challenge, get_user_challenge, remove_user_challenge
+from shared.utils import get_token
+from resolvers.types.types import PictureType
 import time
 import os
 import json

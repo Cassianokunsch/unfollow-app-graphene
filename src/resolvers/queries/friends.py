@@ -1,8 +1,8 @@
 from graphene import ObjectType, Field, NonNull, String
-from src.service.instagramApi import get_user_info
-from src.shared.utils import get_current_user
-from src.resolvers.types.types import UserType, Feed
-from src.middleware.auth import get_user_session
+from service.instagramApi import get_user_info
+from shared.utils import get_current_user
+from resolvers.types.types import UserType, Feed
+from middleware.auth import get_user_session
 
 
 class FriendsQuery(ObjectType):
