@@ -1,5 +1,5 @@
 from graphene import Schema
-from queries import Query
-from mutations import Mutation
+from resolvers.queries.query import Query
+from resolvers.mutations.mutation import Mutation
 
 schema = Schema(query=Query, mutation=Mutation)

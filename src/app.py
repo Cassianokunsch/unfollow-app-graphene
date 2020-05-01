@@ -3,7 +3,6 @@ from flask_graphql import GraphQLView
 from schema import schema
 import os
 
-
 app = Flask(__name__)
 
 app.add_url_rule(
@@ -16,4 +15,4 @@ app.add_url_rule(
 )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', "5000"))
+    app.run(host='localhost', debug=True, port=os.environ.get('PORT', "5000"))
