@@ -1,7 +1,7 @@
 from graphene import Mutation, String, NonNull
-from service.instagramApi import login, logout, send_code_challenge
+from service.auth import login, logout, send_code_challenge
 from shared.utils import get_current_user, get_link_challenge
-from resolvers.types.types import AuthPayload
+from resolvers.types.auth_payload import AuthPayload
 
 
 class Login(Mutation):
@@ -13,8 +13,7 @@ class Login(Mutation):
         password = String(required=True)
 
     def mutate(root, info, username, password):
-        message, token = login(username, password)
-        return AuthPayload(token=token, message=message)
+        return login(username, password)
 
 
 class Logout(Mutation):
@@ -36,5 +35,4 @@ class SendCodeToChallenge(Mutation):
 
     def mutate(roo, info, code):
         link = get_link_challenge(info.context)
-        message, token = send_code_challenge(link, code)
-        return AuthPayload(token=token, message=message)
+        return send_code_challenge(link, code)

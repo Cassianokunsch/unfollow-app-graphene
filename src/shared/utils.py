@@ -1,14 +1,15 @@
 from jwt import decode, encode
 from graphql import GraphQLError
-from shared.constants import TOKEN_ERROR, SECRET, INVALID_TOKEN, CHALLENGE_REQUIRED
+from shared.vars import SECRET, ALGORITHM
+from shared.messages import CHALLENGE_REQUIRED, INVALID_TOKEN, TOKEN_ERROR
 
 
 def get_token(data):
-    return encode(data, SECRET, algorithm='HS256').decode('utf-8')
+    return encode(data, SECRET, algorithm=ALGORITHM).decode('utf-8')
 
 
 def decode_token(token):
-    return decode(token, SECRET, algorithm='HS256')
+    return decode(token, SECRET, algorithm=ALGORITHM)
 
 
 def get_current_user(context):
