@@ -88,9 +88,7 @@ def get_unfollowers(api):
 def get_user_feed(username_id, next_page=''):
     api = get_session(username_id)
     if api.getUserFeed(username_id, next_page):
-        print(api.LastJson)
         response = api.LastJson['items']
-        print(list(response.keys()))
 
         pictures = []
 
@@ -108,7 +106,7 @@ def get_user_feed(username_id, next_page=''):
                     url=url
                 ))
 
-        return Feed(pictures=pictures, next_page=response['items']["next_max_id"], size=len(pictures))
+        return Feed(pictures=pictures, next_page=api.LastJson["next_max_id"], size=len(pictures))
 
     raise GraphQLError(UNKNOW_ERROR)
 
