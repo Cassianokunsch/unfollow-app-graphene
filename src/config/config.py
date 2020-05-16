@@ -3,7 +3,6 @@ import os
 
 class BaseConfig(object):
     DEBUG = False
-    PORT = os.environ.get('PORT', "5000")
 
 
 class DevelopmentConfig(BaseConfig):
