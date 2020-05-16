@@ -1,6 +1,7 @@
 from jwt import decode, encode
 from graphql import GraphQLError
-from shared.vars import SECRET, ALGORITHM
+from shared.constants import ALGORITHM
+from config.vars import SECRET
 from shared.messages import CHALLENGE_REQUIRED, INVALID_TOKEN, TOKEN_ERROR
 
 

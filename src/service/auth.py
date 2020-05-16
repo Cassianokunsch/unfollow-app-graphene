@@ -3,7 +3,7 @@ from graphql import GraphQLError
 from storage import session
 from storage import challenge
 from shared.messages import LOGIN_SUCCESS, INVALID_CREDENTIALS_ERROR, CHALLENGE_REQUIRED, UNKNOW_ERROR, CODE_ERROR, LOGOUT_SUCCESS
-from shared.vars import BASE_URL
+from shared.constants import BASE_URL
 from shared.utils import get_token
 from resolvers.types.auth_payload import AuthPayload
 import json
