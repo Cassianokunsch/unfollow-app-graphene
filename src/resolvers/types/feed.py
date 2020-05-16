@@ -3,6 +3,6 @@ from resolvers.types.picture import Picture
 
 
 class Feed(ObjectType):
-    next_page = NonNull(String)
+    next_page = String()
     size = NonNull(Int)
     pictures = NonNull(List(NonNull(Picture)))
