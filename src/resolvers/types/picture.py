@@ -1,8 +1,8 @@
-from graphene import ObjectType, String, Int
+from graphene import ObjectType, String, Int, NonNull
 
 
 class Picture(ObjectType):
-    pk = String()
-    comment_count = Int()
-    like_count = Int()
-    url = String()
+    pk = NonNull(String)
+    comment_count = NonNull(Int)
+    like_count = NonNull(Int)
+    url = NonNull(String)

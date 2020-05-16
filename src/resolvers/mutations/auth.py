@@ -6,7 +6,7 @@ from resolvers.types.auth_payload import AuthPayload
 
 class Login(Mutation):
 
-    Output = AuthPayload
+    Output = NonNull(AuthPayload)
 
     class Arguments:
         username = String(required=True)
@@ -28,7 +28,7 @@ class Logout(Mutation):
 
 class SendCodeToChallenge(Mutation):
 
-    Output = AuthPayload
+    Output = NonNull(AuthPayload)
 
     class Arguments:
         code = String(required=True)

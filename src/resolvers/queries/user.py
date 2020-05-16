@@ -11,14 +11,14 @@ from service.user import get_user_info, get_user_feed, get_user_followers_or_fol
 class UserQuery(ObjectType):
     user_info = Field(NonNull(UserInfo), pk=String(default_value=''))
 
-    user_feed = Field(Feed, user_id=String(default_value=''),
-                      next_page=String(default_value=''))
+    user_feed = Field(NonNull(Feed), user_id=String(
+        default_value=''), next_page=String(default_value=''))
 
-    my_followers = Field(
-        NonNull(MyFollowers), next_page=String(default_value=''))
+    my_followers = Field(NonNull(MyFollowers),
+                         next_page=String(default_value=''))
 
-    my_followings = Field(
-        NonNull(MyFollowings), next_page=String(default_value=''))
+    my_followings = Field(NonNull(MyFollowings),
+                          next_page=String(default_value=''))
 
     my_unfollowers = Field(NonNull(MyUnfollowers),
                            next_page=String(default_value=''))
