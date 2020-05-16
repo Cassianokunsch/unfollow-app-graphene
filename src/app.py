@@ -22,4 +22,4 @@ app.add_url_rule(
 )
 
 if __name__ == '__main__':
-    app.run(host=app.config['HOST'])
+    app.run(host=app.config['HOST'], port=os.environ.get('PORT', "5000"))
