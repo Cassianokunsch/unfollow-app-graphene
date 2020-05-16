@@ -46,4 +46,4 @@ class UserQuery(ObjectType):
     def resolve_my_unfollowers(self, info, next_page):
         user_pk = get_current_user(info.context)
         users = get_not_followers(user_pk)
-        return MyUnfollowers(unfollowers=users, next_page=None, size=len(users))
+        return MyUnfollowers(unfollowers=users, next_page="", size=len(users))
