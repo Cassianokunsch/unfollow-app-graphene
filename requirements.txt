@@ -19,7 +19,7 @@ Pillow==7.0.0
 promise==2.3
 pycodestyle==2.5.0
 PyJWT==1.7.1
-requests==2.20.0
+requests==2.11.1
 requests-toolbelt==0.7.0
 Rx==1.6.1
 six==1.14.0
